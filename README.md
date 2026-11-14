@@ -1,4 +1,3 @@
-# market-sentimental-model
 # Headline Shock & Market Asymmetry: Predicting DJIA Direction
 
 **Track:** Finance  
