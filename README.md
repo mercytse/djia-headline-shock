@@ -46,4 +46,11 @@ Starting from the baseline prompt requirements, we implemented a strict chronolo
 1. Clone this repository and install dependencies:
    ```bash
    pip install -r requirements.txt
+
+## 5. Credits
+Dataset: Daily News for Stock Market Prediction (Combined_News_DJIA.csv) via Kaggle.
+Market Data: CBOE Volatility Index (^VIX) via yfinance.
+Pretrained Sentiment Model: VADER Sentiment Analysis via NLTK.
+Libraries: pandas, numpy, scikit-learn, and matplotlib.
+AI Tools: Gemini was used to assist with README structuring and when the code showed error 
   
