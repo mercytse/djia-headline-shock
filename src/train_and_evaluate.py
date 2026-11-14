@@ -136,3 +136,9 @@ ax2.set_ylim(0, 105)
 plt.title("Selective Abstention: Accuracy vs. Trade Coverage (2015–2016)")
 fig.tight_layout()
 plt.savefig(OUTPUT_DIR / "confidence_curve.png", dpi=200)
+
+# Change this:
+DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "Combined_News_DJIA.csv"
+
+# To this (if it's in the same main folder):
+DATA_PATH = "Combined_News_DJIA.csv"
