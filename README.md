@@ -28,20 +28,36 @@ Starting from the baseline prompt requirements, we implemented a strict chronolo
 
 ---
 
-## 3. Results & Honest Takeaways
+## 3. Experimental Results (Out-of-Sample Test Period: 2015–2016)
 
-| Model / Strategy | Test Accuracy (2015–2016) | Notes |
+To prevent look-ahead bias, the model was trained strictly on historical data from **2008–2014** and evaluated out-of-sample on **2015–2016**.
+
+### Model Accuracy Comparison
+| Model / Strategy | Test Accuracy | Notes |
 | :--- | :---: | :--- |
-| **Baseline 1: Always Predict Up** | `53.17%` | Reflects the long-term upward drift of equities. |
-| **Baseline 2: Previous Day Direction** | `48.94%` | Simple daily momentum fails due to mean reversion. |
-| **Our Model: Shock + VIX Logistic Regression** | `~53.4%` | Marginally beats baselines, confirming daily news is mostly priced in. |
+| **Always-Up Baseline** | `50.79%` (0.5079) | Naive benchmark assuming daily upward drift |
+| **Shock + VIX Model (Ours)** | `48.41%` (0.4841) | Logistic Regression combining VADER sentiment shocks & lagged VIX |
+| **Previous-Day Baseline** | `45.77%` (0.4577) | Naive momentum benchmark |
 
+### Feature Weights & Economic Interpretation
+| Feature | Weight | Financial Interpretation |
+| :--- | :---: | :--- |
+| `sent_mean` | `+0.1733` | Strongest positive driver; broad positive daily news consensus correlates with upward DJIA movement. |
+| `sent_dispersion` | `+0.0325` | Higher disagreement/spread across top headlines slightly favors upward drift. |
+| `fear_amplified_shock` | `+0.0098` | Interaction term capturing sentiment shocks during elevated volatility regimes. |
+| `severe_neg_count` | `-0.0101` | Count of extreme negative headlines exerts mild downward pressure. |
+| `prev_vix` | `-0.0355` | Elevated prior-day market fear (VIX) negatively impacts next-day direction. |
+| `worst_headline` | `-0.0412` | Single most negative daily headline acts as a drag on next-day returns. |
+| `sent_shock` | `-0.0421` | Sudden negative deviations from rolling sentiment baseline correlate with downward moves. |
+
+### Key Takeaways & Limitations
+* **Signal-to-Noise in Daily Headlines:** While the model outperforms the naive previous-day momentum baseline (`48.41%` vs. `45.77%`), beating a simple always-up bull-market baseline (`50.79%`) on raw daily direction remains challenging due to high market efficiency and overnight noise.
+* **Asymmetry & Selective Abstention:** Extreme negative headlines (`worst_headline`) and sudden sentiment drops (`sent_shock`) carry meaningful negative weights, motivating the selective abstention strategy to filter out low-confidence, noisy trading days.
+---
 ### What These Results Justify (and What They Don't)
 * **What an investor CANNOT do:** Use daily aggregated news headlines to day-trade the DJIA. A ~0.3%–1.5% edge over the "Always-Up" baseline disappears immediately once bid-ask spreads, slippage, and execution latency are factored in. Furthermore, public headlines reflect information institutional algorithms have already traded on.
 * **What an investor CAN do:** Use headline dispersion and VIX interaction spikes as a **risk-management filter** (e.g., tightening stop-losses or reducing leverage on days with extreme negative tail-risk news).
-
----
-
+* 
 ## 4. How to Run
 1. Clone this repository and install dependencies:
    ```bash
